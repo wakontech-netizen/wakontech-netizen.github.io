@@ -6,47 +6,25 @@
     <script type="text/javascript">
         
         const MY_APP_SCHEME = "nutritionAI://reset-password?";
-        const IOS_STORE_URL = "https://apps.apple.com/app/your-app-id"; //
-        const ANDROID_STORE_URL = "https://play.google.com/store/apps/details?id=com.your.package"; 
-        const TIMEOUT = 1500; 
-
-        function getOS() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            if (/android/i.test(ua)) {
-                return "android";
-            }
-            if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-                return "ios";
-            }
-            return "unknown";
-        }
 
         function redirect() {
-            const os = getOS();
             const destination = window.location.hash.substring(1); 
             const appUrl = MY_APP_SCHEME + destination;
                        
             window.location.replace(appUrl);
+        }
 
-            setTimeout(() => {
-                if (os === "ios") {
-                    window.location.replace(IOS_STORE_URL);
-                } else if (os === "android") {
-                    window.location.replace(ANDROID_STORE_URL);
-                } 
-            }, TIMEOUT);
+        function openApp() {
+            const destination = window.location.hash.substring(1); 
+            const appUrl = MY_APP_SCHEME + destination;
+            window.location.href = appUrl;
         }
 
         window.onload = redirect;
     </script>
 </head>
 <body>
-    <p>如果 App 未能自動打開，請點擊此處前往 <a id="store-link" href="#">App Store</a> 或 <a id="store-link-android" href="#">Google Play</a>。</p>
-    <script>
-        document.getElementById('store-link').href = IOS_STORE_URL;
-        document.getElementById('store-link-android').href = ANDROID_STORE_URL;
-    </script>
+    <p>如果 App 未能自動打開，請點擊此處<a href="#" onclick="openApp(); return false;">前往</a> </p>
 </body>
-
 
 </html>
