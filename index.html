@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>正在打開 App...</title>
+    <script type="text/javascript">
+        // --- 你需要修改的內容 ---
+        const MY_APP_SCHEME = "nutritionAI://"; // 1. 改成你 App 的 Scheme
+        const IOS_STORE_URL = "https://apps.apple.com/app/your-app-id"; // 2. 改成你 App Store 的網址
+        const ANDROID_STORE_URL = "https://play.google.com/store/apps/details?id=com.your.package"; // 3. 改成你 Google Play 的網址
+        const TIMEOUT = 1500; // 延遲多久跳轉去 App Store (毫秒)
+        // ------------------------
+
+        function getOS() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            if (/android/i.test(ua)) {
+                return "android";
+            }
+            if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+                return "ios";
+            }
+            return "unknown";
+        }
+
+        function redirect() {
+            const os = getOS();
+            const destination = window.location.hash.substring(1); // 讀取 # 後面的路徑
+            const appUrl = MY_APP_SCHEME + destination;
+            
+            // 嘗試直接打開 App
+            window.location.replace(appUrl);
+
+            // 如果用戶沒有安裝 App，上面的指令會失敗，然後執行 setTimeout
+            setTimeout(() => {
+                if (os === "ios") {
+                    window.location.replace(IOS_STORE_URL);
+                } else if (os === "android") {
+                    window.location.replace(ANDROID_STORE_URL);
+                } 
+            }, TIMEOUT);
+        }
+
+        // 頁面載入後馬上執行
+        window.onload = redirect;
+    </script>
+</head>
+<body>
+    <p>如果 App 未能自動打開，請點擊此處前往 <a id="store-link" href="#">App Store</a> 或 <a id="store-link-android" href="#">Google Play</a>。</p>
+    <script>
+        // 為了安全，動態設置備用連結
+        document.getElementById('store-link').href = IOS_STORE_URL;
+        document.getElementById('store-link-android').href = ANDROID_STORE_URL;
+    </script>
+</body>
+</html>
